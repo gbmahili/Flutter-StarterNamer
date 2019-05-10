@@ -33,10 +33,13 @@ class RandomWordsState extends State<RandomWords> {
   // 1. create an empty list (array)
   final List<WordPair> _suggestions = <WordPair>[];
 
-  // 2. create a variable to hold font size
+  // 2. Add a Set to store favorited:
+  //Set is preferred to List because a properly implemented Set does not allow duplicate entries.
+  final Set<WordPair> _saved = Set<WordPair>();
+  // 3. create a variable to hold font size
   final TextStyle _biggerFont = const TextStyle(fontSize: 18);
 
-  // 3.  Create a widget (a component) that will return a layout)
+  // 4.  Create a widget (a component) that will return a layout)
   @override
   Widget build(BuildContext context) {
     // final WordPair wordPair = WordPair.random();
@@ -84,11 +87,17 @@ class RandomWordsState extends State<RandomWords> {
         });
   }
 
+  //This functions creates a row for the list
   Widget _buildRow(WordPair pair) {
+    final bool alreadySaved = _saved.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
+      ),
+      trailing: Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
       ),
     );
   }
