@@ -4,26 +4,11 @@ import 'package:english_words/english_words.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     title: 'Welcome to Flutter Baraka',
-  //     home: Scaffold(
-  //       appBar: AppBar(
-  //         title: Text('Welcome to Flutter Baraka M'),
-  //       ),
-  //       body: Center(
-  //         // child: const Text('Hello Mahili'),
-  //         // child: Text(wordPair.asPascalCase),
-  //         child: RandomWords(),
-  //       ),
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
+      theme: ThemeData(primaryColor: Colors.white),
       home: RandomWords(),
     );
   }
@@ -66,13 +51,16 @@ class RandomWordsState extends State<RandomWords> {
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
       final Iterable<ListTile> titles = _saved.map((WordPair pair) {
         return ListTile(
-            title: Text(
-          pair.asPascalCase,
-          style: _biggerFont,
-        ));
+          title: Text(
+            pair.asPascalCase,
+            style: _biggerFont,
+          ),
+        );
       });
-      final List<Widget> divided =
-          ListTile.divideTiles(context: context, tiles: titles).toList();
+      final List<Widget> divided = ListTile.divideTiles(
+        context: context,
+        tiles: titles,
+      ).toList();
       return Scaffold(
         appBar: AppBar(
           title: Text('Saved Suggestions'),
@@ -120,24 +108,31 @@ class RandomWordsState extends State<RandomWords> {
   //This functions creates a row for the list
   Widget _buildRow(WordPair pair) {
     final bool alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
+    return Card(
+      child: ListTile(
+        title: Text(
+          pair.asPascalCase,
+          style: _biggerFont,
+        ),
+        leading: Icon(
+          Icons.assignment_turned_in,
+          color: alreadySaved ? Colors.blue : null,
+        ),
+        trailing: Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.blue : null,
+        ),
+        onTap: () => {
+              setState(() {
+                if (alreadySaved) {
+                  _saved.remove(pair);
+                } else {
+                  _saved.add(pair);
+                }
+              })
+            },
       ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () => {
-            setState(() {
-              if (alreadySaved) {
-                _saved.remove(pair);
-              } else {
-                _saved.add(pair);
-              }
-            })
-          },
+      color: Colors.white70,
     );
   }
 }
