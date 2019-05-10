@@ -48,10 +48,40 @@ class RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Startup Name Generator'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.list),
+            tooltip: 'Show Favorited Names',
+            onPressed: _pushSaved,
+          )
+        ],
       ),
       // The body is calling another method to build its body...returning a component in React
       body: _buildSuggestions(),
     );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      final Iterable<ListTile> titles = _saved.map((WordPair pair) {
+        return ListTile(
+            title: Text(
+          pair.asPascalCase,
+          style: _biggerFont,
+        ));
+      });
+      final List<Widget> divided =
+          ListTile.divideTiles(context: context, tiles: titles).toList();
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Saved Suggestions'),
+        ),
+        body: ListView(
+          children: divided,
+        ),
+      );
+    }));
   }
 
   Widget _buildSuggestions() {
@@ -99,15 +129,15 @@ class RandomWordsState extends State<RandomWords> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
-			onTap: () => {
-				setState((){
-					if (alreadySaved) {
-						_saved.remove(pair);
-					} else {
-						_saved.add(pair);
-					}
-				})
-			},
+      onTap: () => {
+            setState(() {
+              if (alreadySaved) {
+                _saved.remove(pair);
+              } else {
+                _saved.add(pair);
+              }
+            })
+          },
     );
   }
 }
